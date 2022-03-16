@@ -23,7 +23,7 @@
               :key="item.id"
             >
               <div class="card">
-                <CardCover :item="item"/>
+                <CardCover :coverImgUrl="item.coverImgUrl"/>
                 <div class="card-title">{{ item.name }}</div>
                 <div class="card-playCount">
                   播放量: {{ formatCount(item.playCount) }}

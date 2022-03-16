@@ -38,3 +38,10 @@ export function requestHotSingerData(limit=6,offset=0) {
     }
   });
 }
+/* home页，新碟上架 */
+export function requestNewAlbumData() {
+  return request({
+    url: "album/newest",
+    method: "get",
+  });
+}

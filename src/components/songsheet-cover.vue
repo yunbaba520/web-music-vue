@@ -1,6 +1,6 @@
 <template>
   <a href="javascript:void(0);" class="card-top">
-    <img class="card-img" :src="item.coverImgUrl" alt="" />
+    <img class="card-img" :src="coverImgUrl" alt="" />
     <i class="card-cover"></i>
   </a>
 </template>
@@ -8,7 +8,7 @@
 <script>
 import { formatCount } from "@/utils/format";
 export default {
-  props: ["item"],
+  props: ["coverImgUrl"],
   methods: {
     formatCount,
   },
