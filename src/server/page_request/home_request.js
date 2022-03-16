@@ -27,6 +27,7 @@ export function requestRankingData(id) {
     }
   });
 }
+/* 热门歌手 */
 export function requestHotSingerData(limit=6,offset=0) {
   return request({
     url: "top/artists",

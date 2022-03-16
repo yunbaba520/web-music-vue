@@ -1,5 +1,5 @@
 <template>
-  <div class="newsongs-wrap">
+  <div class="newsongs-wrap" v-if="newSongsList.length>0">
     <div class="newsongs">
       <div class="header"><div class="header-bg"></div></div>
       <div class="song-list">
@@ -38,7 +38,7 @@ export default {
 
 <style lang="less" scoped>
 .newsongs-wrap {
-  background-image: linear-gradient(#faebd7, #ffffff);
+  background-image: linear-gradient(#FEF9F3, #ffffff);
   .newsongs {
     width: 1200px;
     margin: 0 auto;
