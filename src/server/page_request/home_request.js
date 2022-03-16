@@ -1,11 +1,12 @@
 import request from "../request";
-
+/* 轮播图数据 */
 export function requestBannerData() {
   return request({
     url: "banner",
     method: "get",
   });
 }
+/* 歌单推荐 */
 export function requestSongSheetData(cat="全部",limit=10) {
   return request({
     url: "top/playlist",
@@ -13,6 +14,26 @@ export function requestSongSheetData(cat="全部",limit=10) {
     params:{
       cat,
       limit
+    }
+  });
+}
+/* 歌单详情，排行榜也是歌单 */
+export function requestRankingData(id) {
+  return request({
+    url: "playlist/detail",
+    method: "get",
+    params:{
+      id
+    }
+  });
+}
+export function requestHotSingerData(limit=6,offset=0) {
+  return request({
+    url: "top/artists",
+    method: "get",
+    params:{
+      limit,
+      offset
     }
   });
 }
