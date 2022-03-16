@@ -9,10 +9,6 @@ export const headerLinks = [
     link: "/songsheet",
   },
   {
-    title: "排行榜",
-    link: "/toplist",
-  },
-  {
     title: "歌手",
     link: "/singer",
   },
@@ -20,4 +16,9 @@ export const headerLinks = [
     title: "新碟",
     link: "/album",
   },
+  {
+    title: "排行榜",
+    link: "/toplist",
+  },
+  
 ];
