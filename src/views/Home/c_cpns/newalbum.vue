@@ -1,5 +1,5 @@
 <template>
-  <div class="newalbum-wrap">
+  <div class="newalbum-wrap" v-if="albumList.length>0">
     <div class="newalbum">
       <div class="header">
         <div class="header-bg"></div>
