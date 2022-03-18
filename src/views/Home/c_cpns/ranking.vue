@@ -1,5 +1,5 @@
 <template>
-  <div class="ranking-wrap">
+  <div class="ranking-wrap" v-if="upData.tracks">
     <div class="ranking">
       <div class="header">
         <div class="header-bg"></div>

@@ -2,8 +2,9 @@
   <div
     class="banner-wrap"
     :style="{ background: `url(${bgimg}) center center/6000px ` }"
+    v-if="bannerData.length > 0"
   >
-    <div class="banner" v-if="bannerData.length > 0">
+    <div class="banner" >
       <div class="left">
         <el-carousel
           :interval="4000"
@@ -116,4 +117,5 @@ export default {
       
     }
 }
+
 </style>
