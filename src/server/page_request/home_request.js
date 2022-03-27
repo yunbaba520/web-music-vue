@@ -7,13 +7,14 @@ export function requestBannerData() {
   });
 }
 /* 歌单推荐 */
-export function requestSongSheetData(cat="全部",limit=10) {
+export function requestSongSheetData(cat="全部",limit=10,offset=0) {
   return request({
     url: "top/playlist",
     method: "get",
     params:{
       cat,
-      limit
+      limit,
+      offset
     }
   });
 }
