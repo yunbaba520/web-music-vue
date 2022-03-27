@@ -1,6 +1,6 @@
 import request from "../request";
 
-/* 轮播图数据 */
+/* 获取歌单分类 */
 export function requestSongSheetCategoryData() {
     return request({
       url: "playlist/catlist",

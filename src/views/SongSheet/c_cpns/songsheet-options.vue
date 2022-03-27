@@ -1,15 +1,16 @@
 <template>
   <div class="songsheet-options-wrap">
     <div class="songsheet-options">
-      <div>{{ all.name }}</div>
+      <div class="all-songsheet" @click="clickOption(all.name)">{{ all.name }}</div>
       <div class="option-list">
         <template v-for="(item, i) in categories" :key="item">
           <div class="option-item">
             <div class="item-title">{{ item }}</div>
             <div class="item-content">
               <template v-for="iten in this[`option${i}`]" :key="iten.name">
-                <span class="one">{{ iten.name }}</span>
+                <span class="one" @click="clickOption(iten.name)">{{ iten.name }}</span>
               </template>
+              <i/><i/><i/>
             </div>
           </div>
         </template>
@@ -20,11 +21,10 @@
 
 <script>
 import { requestSongSheetCategoryData } from "../../../server/page_request/songsheet_request";
-
+import {mapActions} from 'vuex'
 export default {
   created() {
     requestSongSheetCategoryData().then((res) => {
-      console.log(res);
       this.all = res.all;
       this.categories = res.categories;
       res.sub.forEach((item) => {
@@ -49,6 +49,7 @@ export default {
         }
       });
     });
+    this.getSongsheetListData(["全部歌单",50,0])
   },
   data() {
     return {
@@ -61,6 +62,12 @@ export default {
       categories: {},
     };
   },
+  methods:{
+    clickOption(name){
+      this.getSongsheetListData([name,50,0])
+    },
+    ...mapActions(['getSongsheetListData'])
+  }
 };
 </script>
 
@@ -69,13 +76,25 @@ export default {
   .songsheet-options {
     width: 1200px;
     margin: 0 auto;
+    .all-songsheet {
+      width: 80px;
+      height: 25px;
+      line-height: 25px;
+      text-align: center;
+      border-radius: 5px;
+      background-color: #f77870;
+      margin-bottom: 3px;
+      cursor: pointer;
+    }
     .option-list {
       display: flex;
       justify-content: space-between;
       .option-item {
         width: 220px;
-        // .item-title {
-        // }
+        .item-title {
+          font-size: 16px;
+          font-weight: 700;
+        }
         .item-content {
           display: flex;
           flex-wrap: wrap;
@@ -84,10 +103,13 @@ export default {
             width: 70px;
             height: 25px;
             margin: 3px 0;
+            font-size: 14px;
+            color: #333;
             line-height: 25px;
             text-align: center;
-            background-color: #ddd;
+            background-color: #f8f8f8;
             border-radius: 20px;
+            cursor: pointer;
             /* 显示一行 */
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -100,6 +122,12 @@ export default {
             word-break: break-all;
             white-space: normal;
             overflow: hidden;
+            &:hover {
+              color: #f77870;
+            }
+          }
+          i{
+            width: 70px;
           }
         }
       }
