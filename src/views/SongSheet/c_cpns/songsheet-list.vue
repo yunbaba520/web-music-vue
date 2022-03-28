@@ -7,8 +7,8 @@
       <div class="list">
         <template v-for="item in songSheetListData.playlists" :key="item.id">
           <div class="card">
-            <CardCover :coverImgUrl="item.coverImgUrl" />
-            <div class="card-title">{{ item.name }}</div>
+            <CardCover :coverImgUrl="item.coverImgUrl" @click="handleSongSheetClick(item)"/>
+            <div class="card-title" @click="handleSongSheetClick(item)">{{ item.name }}</div>
             <div class="card-playCount">
               播放量: {{ formatCount(item.playCount) }}
             </div>
@@ -51,9 +51,16 @@ export default {
     CardCover,
   },
   methods: {
+    //分页器改变
     handleCurrentChange(val) {
       let offset = (val - 1) * 50;
       this.getSongsheetListData([this.songSheetSelectCat, 50, offset]);
+    },
+    //进入歌单详情页
+    handleSongSheetClick(item){
+      this.$router.push({
+        path:'/songsheetDetail'
+      })
     },
     formatCount,
     ...mapActions(["getSongsheetListData"]),

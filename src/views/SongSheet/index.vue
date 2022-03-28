@@ -1,15 +1,7 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <h2>歌单</h2>
     <song-sheet-options />
     <song-sheet-list />
-    yyyy
-    zzzz
-=======
-    <song-sheet-options />
-    <song-sheet-list />
->>>>>>> songsheet
   </div>
 </template>
 
