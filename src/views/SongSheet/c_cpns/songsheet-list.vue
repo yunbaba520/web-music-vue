@@ -59,8 +59,13 @@ export default {
     //进入歌单详情页
     handleSongSheetClick(item){
       this.$router.push({
-        path:'/songsheetDetail'
+        name:'songsheetDetail',
+        params:{
+          id:item.id
+        }
       })
+      // console.log(item);
+      //新分支已建好，开始歌单详情开发吧
     },
     formatCount,
     ...mapActions(["getSongsheetListData"]),

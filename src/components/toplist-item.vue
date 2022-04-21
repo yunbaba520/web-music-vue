@@ -22,6 +22,7 @@
 </template>
 
 <script>
+/* 首页排行榜组件 */
 export default {
   props: ["toplistData"],
 };
