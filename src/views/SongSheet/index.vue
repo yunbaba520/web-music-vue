@@ -1,19 +1,15 @@
 <template>
   <div>
-    <song-sheet-options />
-    <song-sheet-list />
+    <router-view/>
   </div>
 </template>
 
 <script>
-import SongSheetOptions from "./c_cpns/songsheet-options.vue";
-import SongSheetList from "./c_cpns/songsheet-list.vue";
-export default {
-  components: {
-    SongSheetOptions,
-    SongSheetList,
-  },
-};
+  export default {
+    
+  }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+</style>

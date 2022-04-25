@@ -73,7 +73,7 @@ import SongsheetRecommend from "../../components/songsheet-recommend.vue";
 import { formatCount } from "../../utils/format";
 export default {
   created() {
-    this.getDataById(this.$route.params.id);
+    this.getDataById(this.$route.query.id);
   },
   data() {
     return {

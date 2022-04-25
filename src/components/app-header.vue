@@ -24,23 +24,148 @@
           </template>
         </el-input>
       </div>
-      <div class="nav-login">登录</div>
+      <div class="nav-login" v-if="!isLogin"  @click="dialogFormVisible = true">登录</div>
+      <div class="login-info" v-else> <el-avatar :size="50" :src="loginInfo.profile.avatarUrl" /></div>
+      
     </div>
+
+    <el-dialog v-model="dialogFormVisible" title="登录" width="30%" draggable>
+      <el-tabs v-model="activeName" class="demo-tabs">
+        <el-tab-pane label="手机登录" name="phone">
+          <el-form
+            :model="formPhone"
+            label-width="70px"
+            :rules="rulesPhone"
+            ref="formRefPhone"
+          >
+            <el-form-item label="手机号" prop="name">
+              <el-input v-model="formPhone.name" />
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                v-model="formPhone.password"
+                type="password"
+                show-password
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="resetPhone">重置</el-button>
+              <el-button type="primary" @click="submitPhone"
+                >登录</el-button
+              >
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="邮箱登录" name="emil">
+          <el-form
+            :model="formEmil"
+            label-width="70px"
+            :rules="rulesEmil"
+            ref="formRefEmil"
+          >
+            <el-form-item label="邮箱" prop="name">
+              <el-input v-model="formEmil.name" />
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                v-model="formEmil.password"
+                type="password"
+                show-password
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="resetEmil">重置</el-button>
+              <el-button type="primary" @click="submitEmil"
+                >登录</el-button
+              >
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { headerLinks } from "../common/local-data";
 import { Search } from "@element-plus/icons-vue";
+import { headerLinks } from "../common/local-data";
+import { mapState, mapActions } from "vuex";
+
 export default {
   data() {
     return {
       headerLinks,
       inputValue: "",
+      dialogFormVisible: false,
+      activeName: "phone",
+      formPhone: {
+        name: "13460787646",
+        password: "1224251X",
+      },
+      rulesPhone: {
+        name: [
+          { required: true, message: "请输入你的手机号", trigger: "blur" },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "手机号码格式不正确",
+            trigger: "blur",
+          },
+        ],
+        password: [
+          { required: true, message: "请输入你的密码", trigger: "blur" },
+        ],
+      },
+      formEmil:{
+        name: "zhao13460787646@163.com",
+        password: "1224251X",
+      },
+      rulesEmil: {
+        name: [
+          { required: true, message: "请输入你的邮箱", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入你的密码", trigger: "blur" },
+        ],
+      },
     };
+  },
+  computed:{
+    ...mapState(["loginInfo","isLogin"])
   },
   components: {
     Search,
+  },
+  methods: {
+    submitPhone() {
+     this.$refs.formRefPhone.validate((valid, fields) => {
+        if (valid) {
+          this.getLoginInfoByPhone([this.formPhone.name,this.formPhone.password])
+          this.dialogFormVisible = false
+          this.resetPhone()
+        } else {
+          console.log("error submit!", fields);
+        }
+      });
+    },
+    submitEmil() {
+      this.$refs.formRefEmil.validate((valid, fields) => {
+        if (valid) {
+          this.getLoginInfoByEmail([this.formEmil.name,this.formEmil.password])
+          this.dialogFormVisible = false
+          this.resetEmil()
+        } else {
+          console.log("error submit!", fields);
+        }
+      });
+    },
+    resetPhone() {
+      this.$refs.formRefPhone.resetFields()
+    },
+    resetEmil() {
+      this.$refs.formRefEmil.resetFields()
+    },
+    ...mapActions(["getLoginInfoByPhone","getLoginInfoByEmail"]),
+
   },
 };
 </script>
@@ -75,31 +200,50 @@ export default {
       line-height: 90px;
       color: #000;
       cursor: pointer;
-      &:hover{
+      &:hover {
         color: #f77870;
       }
     }
     .active {
       color: #fff;
       background-color: #f77870;
-      border-bottom: 5px solid #FFBE66;
+      border-bottom: 5px solid #ffbe66;
       &:hover {
         color: #fff;
       }
     }
   }
   .nav-input {
-      line-height: 90px;
-      margin: 0 20px 0 150px;
+    line-height: 90px;
+    margin: 0 20px 0 50px;
   }
   .nav-login {
     font-size: 18px;
     line-height: 90px;
     cursor: pointer;
-    &:hover{
-        color: #f77870;
+    &:hover {
+      color: #f77870;
     }
   }
-
+  .login-info {
+    display: flex;
+    align-content: center;
+    .el-avatar {
+      margin: 20px 10px;
+      cursor: pointer;
+    }
+    .name {
+      height: 30px;
+      margin: 30px 0;
+      cursor: pointer;
+      &:hover {
+        color: #f77870;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+::v-deep .el-dialog__body {
+  padding: 0 10px;
 }
 </style>

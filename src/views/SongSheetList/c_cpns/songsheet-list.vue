@@ -59,8 +59,8 @@ export default {
     //进入歌单详情页
     handleSongSheetClick(item){
       this.$router.push({
-        name:'songsheetDetail',
-        params:{
+        path:'songsheetDetail',
+        query:{
           id:item.id
         }
       })
