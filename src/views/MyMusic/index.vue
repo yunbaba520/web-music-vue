@@ -39,7 +39,7 @@
           <div class="createTime">
             加入时间:
             <span class="text">{{
-              moment(userInfo.createTime).format("YYYY MM DD")
+              formatTime(userInfo.createTime)
             }}</span>
           </div>
           <div class="listenSongs">
@@ -70,7 +70,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import moment from "moment";
+import {formatTime} from '../../utils/format'
 import { myMusicLinks } from "../../common/local-data";
 export default {
   data() {
@@ -85,13 +85,13 @@ export default {
     isLogin(newVal, oldVal) {
       if (newVal) {
         this.getUserInfo();
-        this.getUserInfoOuther()
+        this.getUserInfoOuther();
       }
     },
   },
   methods: {
-    ...mapActions(["getUserInfo","getUserInfoOuther"]),
-    moment,
+    ...mapActions(["getUserInfo", "getUserInfoOuther"]),
+    formatTime,
   },
 };
 </script>

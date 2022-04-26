@@ -13,7 +13,23 @@ const routes = [
   {
     path: '/album',
     name: 'Album',
-    component: () => import(/* webpackChunkName: "album" */ '../views/Album/index.vue')
+    component: () => import(/* webpackChunkName: "album" */ '../views/Album/index.vue'),
+    children:[
+      {
+        path:'',
+        redirect:'/album/albumList'
+      },
+      {
+        path:'albumList',
+        name:'AlbumList',
+        component:()=>import('../views/AlbumList')
+      },
+      {
+        path:'albumDetail',
+        name:'AlbumDetail',
+        component:()=>import('../views/AlbumDetail')
+      },
+    ]
   },
   {
     path: '/singer',
@@ -77,11 +93,6 @@ const routes = [
     path: '/toplist',
     name: 'Toplist',
     component: () => import(/* webpackChunkName: "toplist" */ '../views/Toplist/index.vue')
-  },
-  {
-    path: '/songsheetDetail',
-    name: 'songsheetDetail',
-    component: () => import(/* webpackChunkName: "songsheetDetail" */ '../views/SongSheetDetail/index.vue')
   },
   {
     path: '/myMusic',
