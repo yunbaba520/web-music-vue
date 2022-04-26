@@ -130,6 +130,11 @@ const routes = [
       },
     ]
   },
+  {
+    path:'/songDetail',
+    name:'SongDetail',
+    component: () => import(/* webpackChunkName: "SongDetail" */ '../views/SongDetail')
+  }
 ]
 
 const router = createRouter({

@@ -17,3 +17,21 @@ export function formatCount(count) {
 export function formatTime(time) {
   return moment(time).format("YYYY-MM-DD");
 }
+
+/* 补零算法 */
+export function addZero(count) {
+  //将4:9补成04:09
+  count = count + ""
+  return ("00"+count).slice(count.length)
+}
+
+/* 对时长格式化 */
+export function formatTimeLength(time) {
+  var newTime = parseInt(time)
+  newTime = newTime/1000//毫秒转为秒
+  var minute = Math.floor(newTime/60)
+  var second = Math.floor(newTime%60)
+
+  return addZero(minute)+":"+addZero(second)
+}
+

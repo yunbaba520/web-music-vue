@@ -57,7 +57,7 @@
         <template v-for="(item, index) in selectList" :key="item.id">
           <div class="item">
             <span class="index">{{ index + 1 }}</span>
-            <span class="song-name">{{ item.name }}</span>
+            <span class="song-name" @click="JumpSongDetail(item.id)">{{ item.name }}</span>
             <div class="btns">
               <span class="btn-play"></span>
               <span class="btn-addlist"></span>
@@ -112,6 +112,14 @@ export default {
         console.log(res);
         this.selectList = res.playlist.tracks;
       });
+    },
+    JumpSongDetail(id) {
+      this.$router.push({
+        path:'songDetail',
+        query:{
+          id
+        }
+      })
     },
     formatTime,
   },
@@ -254,6 +262,10 @@ export default {
           word-break: break-all;
           white-space: normal;
           overflow: hidden;
+          &:hover {
+            color: #f77870;
+            cursor: pointer;
+          }
         }
         .ar-name {
           width: 120px;
