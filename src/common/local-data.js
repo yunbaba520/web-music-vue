@@ -1,28 +1,28 @@
 export const headerLinks = [
   {
     title: "首页",
-    link: "/home",
+    link: "/layout/home",
   },
 
   {
     title: "歌单",
-    link: "/songsheet",
+    link: "/layout/songsheet",
   },
   {
     title: "歌手",
-    link: "/singer",
+    link: "/layout/singer",
   },
   {
     title: "新碟",
-    link: "/album",
+    link: "/layout/album",
   },
   {
     title: "排行榜",
-    link: "/toplist",
+    link: "/layout/toplist",
   },
   {
     title: "我的音乐",
-    link: "/myMusic",
+    link: "/layout/myMusic",
   },
   
 ];

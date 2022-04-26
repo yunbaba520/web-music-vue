@@ -9,6 +9,7 @@ import {
   requestGetUserfolloweds,
   requestGetUserRecord
 } from "../server/page_request/login_request";
+import {requestSongDetail} from '../server/page_request/song_request'
 export default createStore({
   state: {
     // 登录信息
@@ -24,6 +25,10 @@ export default createStore({
     //歌单
     songSheetSelectCat: "",
     songSheetListData: {},
+    //全局播放器相关
+    playList:[],//播放列表
+    currentSong:{},//播放的歌曲
+    playModel:1,
   },
   mutations: {
     changeLoginInfo(state, payload) {
@@ -56,6 +61,10 @@ export default createStore({
     changeSongSheetListData(state, payload) {
       state.songSheetListData = payload;
     },
+    /* 播放器 */
+    changeCurrentSong(state,payload) {
+      state.currentSong = payload
+    }
   },
   actions: {
     /* 登录信息 */
@@ -115,6 +124,14 @@ export default createStore({
         context.commit("changeSongSheetListData", res);
       });
     },
+    /* 播放器 */
+    //歌曲详情,改变当前播放歌曲
+    getSongDetail(context,payload) {
+      requestSongDetail(payload).then(res=>{
+        console.log(res);
+        context.commit("changeCurrentSong",res.songs[0])
+      })
+    }
   },
   modules: {},
 });

@@ -14,7 +14,7 @@
         </div>
         <div class="al">所属专辑:{{songInfo.al.name}}</div>
         <div class="btns">
-          <span class="play">播放</span>
+          <span class="play" @click="jumpPlay">播放</span>
           <span class="add">加入列表</span>
           <span class="collect">收藏</span>
         </div>
@@ -63,13 +63,19 @@ export default {
       this.lyricData =parseLyricData
     })
     requestSongSimi(this.id).then(res=>{
-      console.log(res);
       this.simiSongs = res.songs
     })
   },
   components:{
     SongRecommend
   },
+  methods:{
+    jumpPlay() {
+      let routeData = this.$router.resolve({ path:'/play'});
+      // window.open(routeData.href, 'newWindow', 'top=0'); //打开新窗口
+      window.open(routeData.href, '_blank'); //打开新标签
+    }
+  }
 };
 </script>
 

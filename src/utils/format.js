@@ -35,3 +35,7 @@ export function formatTimeLength(time) {
   return addZero(minute)+":"+addZero(second)
 }
 
+/* 获取音乐播放链接 */
+export function getSongPlay(id) {
+  return `https://music.163.com/song/media/outer/url?id=${id}.mp3`
+}
