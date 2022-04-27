@@ -141,7 +141,7 @@ export default {
     },
     singerItemClick(id) {
       this.$router.push({
-        path:'singerDetail',
+        path:'/layout/singer/singerDetail',
         query:{
           id
         }

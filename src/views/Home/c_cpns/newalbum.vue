@@ -3,13 +3,13 @@
     <div class="newalbum">
       <div class="header">
         <div class="header-bg"></div>
-        <span class="header-more">更多</span>
+        <span class="header-more" @click="JumpAlbumList">更多</span>
       </div>
       <div class="album-list">
         <template v-for="item in albumList" :key="item.id">
           <div class="card">
-            <CardCover :coverImgUrl="item.picUrl" />
-            <div class="card-title">{{ item.name }}</div>
+            <CardCover @click="JumpAlbumDetail(item.id)" :coverImgUrl="item.picUrl" />
+            <div @click="JumpAlbumDetail(item.id)" class="card-title">{{ item.name }}</div>
             <div class="card-name">{{ item.artist.name }}</div>
           </div>
         </template>
@@ -35,6 +35,21 @@ export default {
   components: {
     CardCover,
   },
+  methods:{
+    JumpAlbumList() {
+      this.$router.push({
+        path:'/layout/album/albumList'
+      })
+    },
+    JumpAlbumDetail(id) {
+      this.$router.push({
+        path:'/layout/album/albumDetail',
+        query:{
+          id
+        }
+      })
+    }
+  }
 };
 </script>
 

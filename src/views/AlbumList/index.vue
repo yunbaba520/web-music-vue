@@ -69,7 +69,6 @@ export default {
     getAllAlbum(area,offset) {
       requestAllAlbum(area,offset).then((res) => {
         this.allAlbum = res.albums;
-        console.log(res);
         this.pageCount = Math.ceil(res.total/30)
       });
     },

@@ -12,7 +12,7 @@
         <div class="song-item">
           <div class="item-index">{{ index }}</div>
           <div class="item-info">
-            <div class="info-title">{{ item.name }}</div>
+            <div class="info-title" @click="JumpSongDetail(item.id)">{{ item.name }}</div>
             <div class="info-ar">{{ item.ar[0].name }}</div>
           </div>
         </div>
@@ -25,6 +25,16 @@
 /* 首页排行榜组件 */
 export default {
   props: ["toplistData"],
+  methods:{
+    JumpSongDetail(id) {
+      this.$router.push({
+        path:'/layout/songDetail',
+        query:{
+          id
+        }
+      })
+    }
+  }
 };
 </script>
 

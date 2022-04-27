@@ -1,3 +1,4 @@
+
 import { createStore } from "vuex";
 import { requestSongSheetData } from "../server/page_request/home_request";
 import {
@@ -28,7 +29,8 @@ export default createStore({
     //全局播放器相关
     playList:[],//播放列表
     currentSong:{},//播放的歌曲
-    playModel:1,
+    currentSongIndex:0,
+    playModel:0,//0顺序，1单曲，2随机
   },
   mutations: {
     changeLoginInfo(state, payload) {
@@ -62,8 +64,47 @@ export default createStore({
       state.songSheetListData = payload;
     },
     /* 播放器 */
+    changePlayList(state,payload) {
+      state.playList = payload
+    },
     changeCurrentSong(state,payload) {
       state.currentSong = payload
+    },
+    changeCurrentSongIndex(state,payload) {
+      state.currentSongIndex = payload
+    },
+    changePlayModel(state,payload) {
+      state.playModel = payload
+    },
+    cahngeCurrentSongByPrevNext(state,tag) {
+      const nowPlayModel = state.playModel
+      let nowCurrentSongIndex = state.currentSongIndex
+      const nowPlayList = state.playList
+
+      switch (nowPlayModel) {
+        case 2:
+          //随机
+            let randomIndex =  Math.floor(Math.random() * nowPlayList.length);
+            while (randomIndex === nowCurrentSongIndex) {
+              randomIndex = Math.floor(Math.random() * nowPlayList.length);
+            }
+            state.currentSongIndex = randomIndex
+            state.currentSong = nowPlayList[randomIndex]
+          break;
+      
+        default:
+          //顺序 单曲 点击下一首都要列表播放
+            nowCurrentSongIndex=nowCurrentSongIndex+tag
+            if (nowCurrentSongIndex>=nowPlayList.length) {
+              nowCurrentSongIndex=0
+            }
+            if (nowCurrentSongIndex<0) {
+              nowCurrentSongIndex = nowPlayList.length-1
+            }
+            state.currentSongIndex = nowCurrentSongIndex
+            state.currentSong = nowPlayList[nowCurrentSongIndex]
+          break;
+      }
     }
   },
   actions: {
@@ -127,10 +168,45 @@ export default createStore({
     /* 播放器 */
     //歌曲详情,改变当前播放歌曲
     getSongDetail(context,payload) {
-      requestSongDetail(payload).then(res=>{
-        console.log(res);
-        context.commit("changeCurrentSong",res.songs[0])
-      })
+      //1，判断playlist中是否包含该歌曲
+      const playList = context.state.playList
+      const songIndex =  playList.findIndex(song=> {return song.id === payload})
+      if (songIndex !== -1) {
+        //存在
+        context.commit("changeCurrentSongIndex",songIndex)
+        context.commit("changeCurrentSong",playList[songIndex])
+      }else {
+        //不存在
+        requestSongDetail(payload).then(res=>{
+          console.log(res,"song");
+          const song = res.songs && res.songs[0]
+          if(!song)return
+          const newPlayList = [...playList]
+          newPlayList.push(song)
+          //commit
+          context.commit("changePlayList",newPlayList)
+          context.commit("changeCurrentSong",song)
+          context.commit("changeCurrentSongIndex",newPlayList.length-1)
+        })
+      }
+      
+    },
+    //把歌曲加入列表
+    getSongDetailPush(context,payload) {
+      //1，判断playlist中是否包含该歌曲
+      const playList = context.state.playList
+      const songIndex =  playList.findIndex(song=> {return song.id === payload})
+      if (songIndex == -1) {
+        requestSongDetail(payload).then(res=>{
+          const song = res.songs && res.songs[0]
+          if(!song)return
+          const newPlayList = [...playList]
+          newPlayList.push(song)
+          //commit
+          context.commit("changePlayList",newPlayList)
+        })
+      }
+      
     }
   },
   modules: {},

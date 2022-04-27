@@ -25,6 +25,7 @@
 <style lang="less" scoped>
 .footer-wrap {
     background-color: #333333;
+    padding-bottom: 50px;
     .footer {
         width: 1200px;
         margin: 0 auto;

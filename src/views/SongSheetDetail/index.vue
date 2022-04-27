@@ -18,7 +18,7 @@
         <div class="line">
           收藏量:{{ formatCount(listData.subscribedCount) }}
         </div>
-        <div class="btns"><span class="btn1">播放全部</span></div>
+        <div class="btns"><span class="btn1" @click="handlerAllPlayClick">播放全部</span></div>
         <div class="introduce">介绍:{{ listData.description }}</div>
       </div>
     </div>
@@ -38,8 +38,8 @@
             <span class="index">{{ index + 1 }}</span>
             <span class="song-name">{{ item.name }}</span>
             <div class="btns">
-              <span class="btn-play"></span>
-              <span class="btn-addlist"></span>
+              <span @click="handlerOnePlay(item.id)" class="btn-play"></span>
+              <span @click="handlerOnePush(item.id)" class="btn-addlist"></span>
             </div>
             <span class="ar-name">{{ item.ar[0].name }}</span>
             <span class="al-name">{{ item.al.name }}</span>
@@ -71,6 +71,8 @@ import { requestSongSheetRecommend } from "../../server/page_request/songsheet_r
 import { Avatar } from "@element-plus/icons-vue";
 import SongsheetRecommend from "../../components/songsheet-recommend.vue";
 import { formatCount } from "../../utils/format";
+import {mapActions,mapMutations,mapState} from 'vuex'
+
 export default {
   created() {
     this.getDataById(this.$route.query.id);
@@ -85,7 +87,12 @@ export default {
     Avatar,
     SongsheetRecommend,
   },
+   computed:{
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  },
   methods: {
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
     formatCount,
     handleClickSongsheet(id) {
       this.getDataById(id);
@@ -97,6 +104,17 @@ export default {
       requestSongSheetRecommend(id).then((res) => {
         this.recommendData = res.playlists;
       });
+    },
+    handlerAllPlayClick() {
+      this.changePlayList([...this.listData.tracks])
+      this.changeCurrentSong(this.listData.tracks[0])
+      this.changeCurrentSongIndex(0)
+    },
+    handlerOnePlay(id) {
+      this.getSongDetail(id)
+    },
+    handlerOnePush(id) {
+      this.getSongDetailPush(id)
     },
   },
 };

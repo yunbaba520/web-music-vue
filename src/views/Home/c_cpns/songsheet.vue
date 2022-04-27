@@ -23,7 +23,7 @@
               :key="item.id"
             >
               <div class="card">
-                <CardCover :coverImgUrl="item.coverImgUrl"/>
+                <CardCover @click="JumpSongSheetDetail(item.id)" :coverImgUrl="item.coverImgUrl"/>
                 <div class="card-title">{{ item.name }}</div>
                 <div class="card-playCount">
                   播放量: {{ formatCount(item.playCount) }}
@@ -74,6 +74,14 @@ export default {
     },
     clickRightBtn() {
       this.$refs.carousel.next();
+    },
+    JumpSongSheetDetail(id) {
+      this.$router.push({
+        path:"/layout/songsheet/songsheetDetail",
+        query:{
+          id
+        }
+      })
     },
     formatCount,
   },

@@ -5,12 +5,12 @@
       <div class="song-list">
         <template v-for="item in newSongsList" :key="item.id">
           <div class="song-item">
-            <div class="item-img">
+            <div class="item-img" @click="JumpSongDetail(item.id)">
                 <div class="item-img-cover"></div>
                 <img class="item-img-img" :src="item.al.picUrl" alt="" />
             </div>
             <div class="item-info">
-              <div class="title">{{ item.name }}</div>
+              <div class="title"  @click="JumpSongDetail(item.id)">{{ item.name }}</div>
               <div class="name">{{ item.ar[0].name }}</div>
             </div>
           </div>
@@ -33,6 +33,16 @@ export default {
       newSongsList: [],
     };
   },
+  methods:{
+    JumpSongDetail(id) {
+      this.$router.push({
+        path:'/layout/songDetail',
+        query:{
+          id
+        }
+      })
+    }
+  }
 };
 </script>
 

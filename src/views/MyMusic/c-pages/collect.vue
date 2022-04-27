@@ -6,9 +6,9 @@
         <div class="card">
           <CardCover
             :coverImgUrl="item.coverImgUrl"
-            @click="handleSongSheetClick(item)"
+            @click="handleSongSheetClick(item.id)"
           />
-          <div class="card-title" @click="handleSongSheetClick(item)">
+          <div class="card-title" @click="handleSongSheetClick(item.id)">
             {{ item.name }}
           </div>
           <div class="card-playCount">
@@ -34,7 +34,14 @@ export default {
     CardCover,
   },
   methods: {
-    handleSongSheetClick() {},
+    handleSongSheetClick(id) {
+      this.$router.push({
+        path:'/layout/songsheet/songsheetDetail',
+        query:{
+          id
+        }
+      })
+    },
     formatCount,
   },
 };

@@ -16,7 +16,8 @@
       </template>
       <h3>全球媒体榜</h3>
       <template v-for="item in list.slice(4, list.length)" :key="item.id">
-        <div class="item">
+        <div :class="['item', selectTabId == item.id ? 'active-tab' : '']"
+          @click="handlerClickTab(item)">
           <img class="img" :src="item.coverImgUrl" alt="" />
           <div class="info">
             <div class="title">{{ item.name }}</div>
@@ -41,8 +42,8 @@
           </div>
           <div class="description">{{ selectTabItem.description }}</div>
           <div class="btns">
-            <span>播放全部</span>
-            <span>添加到列表</span>
+            <span @click="handlerPlayAllClick">播放全部</span>
+            <span @click="handlerAddPlayListClick">添加到列表</span>
           </div>
         </div>
       </div>
@@ -59,8 +60,8 @@
             <span class="index">{{ index + 1 }}</span>
             <span class="song-name" @click="JumpSongDetail(item.id)">{{ item.name }}</span>
             <div class="btns">
-              <span class="btn-play"></span>
-              <span class="btn-addlist"></span>
+              <span @click="handlerSongPlay(item.id)" class="btn-play"></span>
+              <span @click="handlerSongPushList(item.id)" class="btn-addlist"></span>
             </div>
             <span class="ar-name">
               <template v-for="ar in item.ar" :key="ar.id"
@@ -81,6 +82,7 @@ import { requestTopList } from "../../server/page_request/toplist_request";
 import { requestRankingData } from "../../server/page_request/home_request";
 import { Timer } from "@element-plus/icons-vue";
 import { formatTime } from "../../utils/format";
+import {mapActions,mapMutations,mapState} from 'vuex'
 export default {
   data() {
     return {
@@ -102,6 +104,9 @@ export default {
       this.getSelectTabList(newID);
     },
   },
+  computed:{
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  },  
   methods: {
     handlerClickTab(item) {
       this.selectTabId = item.id;
@@ -109,19 +114,36 @@ export default {
     },
     getSelectTabList(id) {
       requestRankingData(id).then((res) => {
-        console.log(res);
         this.selectList = res.playlist.tracks;
       });
     },
     JumpSongDetail(id) {
       this.$router.push({
-        path:'songDetail',
+        path:'/layout/songDetail',
         query:{
           id
         }
       })
     },
+    handlerSongPlay(id) {
+      this.getSongDetail(id)
+    },
+    handlerSongPushList(id) {
+      this.getSongDetailPush(id)
+    },
+    handlerPlayAllClick() {
+      this.changePlayList([...this.selectList])
+      this.changeCurrentSong(this.selectList[0])
+      this.changeCurrentSongIndex(0)
+    },
+    //添加到列表
+    handlerAddPlayListClick() {
+      const newPlayList = [...this.playList,...this.selectList]
+      this.changePlayList(newPlayList)
+    },
     formatTime,
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"])
   },
   components: {
     Timer,

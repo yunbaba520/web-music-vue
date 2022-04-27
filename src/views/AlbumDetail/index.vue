@@ -13,8 +13,8 @@
         <div class="publish">发行时间:{{formatTime(albumInfo.publishTime)}}</div>
         <div class="company">发行公司:{{albumInfo.company}}</div>
         <div class="btns">
-          <span class="play">播放</span>
-          <span class="add">加入列表</span>
+          <span @click="handlerPlayAllClick" class="play">播放</span>
+          <span @click="handlerAddListAllClick" class="add">加入列表</span>
           <span class="collect">收藏</span>
 
         </div>
@@ -35,8 +35,8 @@
           <span class="index">{{ index + 1 }}</span>
           <span class="song-name">{{ item.name }}</span>
           <div class="btns">
-            <span class="btn-play"></span>
-            <span class="btn-addlist"></span>
+            <span @click="handlerOnePlayClick(item.id)" class="btn-play"></span>
+            <span @click="handlerOneAddListClick(item.id)" class="btn-addlist"></span>
           </div>
           <span class="ar-name">
             <template v-for="ar in item.ar" :key="ar.id">{{ar.name}}&nbsp;&nbsp;&nbsp;</template>
@@ -52,6 +52,8 @@
 <script>
 import { requestAlbumDetail } from "../../server/page_request/album_request";
 import {formatTime} from '../../utils/format'
+import {mapActions,mapMutations,mapState} from 'vuex'
+
 export default {
   data() {
     return{
@@ -61,13 +63,34 @@ export default {
   },
   created() {
     requestAlbumDetail(this.$route.query.id).then((res) => {
-      console.log(res, "rr");
       this.albumInfo = res.album
       this.songsData = res.songs
     });
   },
+  computed:{
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  },
   methods:{
-    formatTime
+    formatTime,
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    //播放全部，直接把playlist替换掉
+    handlerPlayAllClick() {
+      this.changePlayList([...this.songsData])
+      this.changeCurrentSong(this.songsData[0])
+      this.changeCurrentSongIndex(0)
+    },
+    //push
+    handlerAddListAllClick() {
+      const newPlayList = [...this.playList,...this.songsData]
+      this.changePlayList(newPlayList)
+    },
+    handlerOnePlayClick(id) {
+      this.getSongDetail(id)
+    },
+    handlerOneAddListClick(id) {
+      this.getSongDetailPush(id)
+    }
   }
 };
 </script>

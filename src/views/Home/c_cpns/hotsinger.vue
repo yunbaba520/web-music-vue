@@ -3,11 +3,11 @@
     <div class="hotsinger">
       <div class="header">
         <div class="header-title">热门歌手</div>
-        <div class="header-more">更多</div>
+        <div class="header-more" @click="JumpSingerList">更多</div>
       </div>
       <div class="singer-list">
         <template v-for="item in singerData" :key="item.id">
-          <singer-item :img="item.picUrl" :name="item.name"></singer-item>
+          <singer-item :img="item.picUrl" :name="item.name" @imgClick="JumpSingerDetail(item.id)" @nameClick="JumpSingerDetail(item.id)"></singer-item>
         </template>
       </div>
     </div>
@@ -31,6 +31,21 @@ export default {
   components: {
     SingerItem,
   },
+  methods:{
+    JumpSingerDetail(id) {
+      this.$router.push({
+        path:"/layout/singer/singerDetail",
+        query:{
+          id
+        }
+      })
+    },
+    JumpSingerList() {
+      this.$router.push({
+        path:"/layout/singer/singerList",
+      })
+    }
+  }
 };
 </script>
 

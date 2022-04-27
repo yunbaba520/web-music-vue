@@ -17,8 +17,8 @@
             <span class="index">{{ index + 1 }}</span>
             <span class="song-name">{{ item.song.name }}</span>
             <div class="btns">
-              <span class="btn-play"></span>
-              <span class="btn-addlist"></span>
+              <span @click="handlerSongPlay(item.song.id)" class="btn-play"></span>
+              <span @click="handlerSongPushList(item.song.id)" class="btn-addlist"></span>
             </div>
             <span class="ar-name">{{ item.song.ar[0].name }}</span>
             <span class="al-name">{{ item.song.al.name }}</span>
@@ -37,18 +37,26 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapActions,mapMutations,mapState} from 'vuex'
 
 export default {
   
   computed: {
-    ...mapState(["userRecord"]),
+    ...mapState(["userRecord","playList","currentSong","currentSongIndex"]),
   },
+
   components: {
     
   },
   methods: {
-    
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    handlerSongPlay(id) {
+      this.getSongDetail(id)
+    },
+    handlerSongPushList(id) {
+      this.getSongDetailPush(id)
+    },
   },
 };
 </script>

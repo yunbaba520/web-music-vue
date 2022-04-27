@@ -17,9 +17,12 @@ export default {
   emits: ["clickAuthorEmit", "clickSongEmit"],
   methods: {
     clickSong() {
-      this.$emit("clickSongEmit",id)
+      this.$emit("clickSongEmit")
     },
-    clickAuthor() {},
+    clickAuthor() {
+      this.$emit("clickAuthorEmit")
+
+    },
   },
 };
 </script>

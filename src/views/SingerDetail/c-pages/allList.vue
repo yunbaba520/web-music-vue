@@ -3,7 +3,7 @@
     <h3>全部歌曲:{{ allNum }}首</h3>
     <div class="play-hot">
       <span class="icon"></span>
-      <span>播放全部歌曲</span>
+      <span @click="handlerAllPlayClick">播放全部歌曲</span>
     </div>
     <div class="list-table">
       <div class="list-title">
@@ -17,8 +17,8 @@
           <span class="index">{{ index + 1 }}</span>
           <span class="song-name">{{ item.name }}</span>
           <div class="btns">
-            <span class="btn-play"></span>
-            <span class="btn-addlist"></span>
+            <span  @click="handlerOnePlay(item.id)" class="btn-play"></span>
+            <span @click="handlerOnePush(item.id)" class="btn-addlist"></span>
           </div>
           <span class="ar-name">{{ item.ar[0].name }}</span>
           <span class="al-name">{{ item.al.name }}</span>
@@ -32,6 +32,8 @@
 
 <script>
 import { requestSingerAllSongs } from "../../../server/page_request/singer_request";
+import {mapActions,mapMutations,mapState} from 'vuex'
+
 export default {
   data() {
     return {
@@ -45,6 +47,24 @@ export default {
       this.allNum = res.total;
     });
   },
+   computed:{
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  },
+  methods:{
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    handlerAllPlayClick() {
+      this.changePlayList([...this.allData])
+      this.changeCurrentSong(this.allData[0])
+      this.changeCurrentSongIndex(0)
+    },
+     handlerOnePlay(id) {
+      this.getSongDetail(id)
+    },
+    handlerOnePush(id) {
+      this.getSongDetailPush(id)
+    },
+  }
 };
 </script>
 

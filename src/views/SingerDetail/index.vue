@@ -42,6 +42,12 @@ export default {
 
     };
   },
+  watch:{
+    $route(newVal) {
+    this.getPageData(newVal.query.id);
+
+    }
+  },
   methods: {
     getPageData(id) {
       requestSingerDetail(id).then((res) => {

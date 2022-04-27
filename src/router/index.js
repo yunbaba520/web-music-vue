@@ -64,7 +64,7 @@ const routes = [
             children: [
               {
                 path: "",
-                redirect: "/singer/singerDetail/hotList",
+                redirect: "/layout/singer/singerDetail/hotList",
               },
               {
                 path: "hotList",

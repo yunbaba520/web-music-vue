@@ -3,7 +3,7 @@
     <h3>热门歌曲</h3>
     <div class="play-hot">
       <span class="icon"></span>
-      <span>播放热门歌曲</span>
+      <span @click="handlerAllPlayClick">播放热门歌曲</span>
     </div>
     <div class="list-table">
       <div class="list-title">
@@ -17,8 +17,8 @@
           <span class="index">{{ index + 1 }}</span>
           <span class="song-name">{{ item.name }}</span>
           <div class="btns">
-            <span class="btn-play"></span>
-            <span class="btn-addlist"></span>
+            <span @click="handlerOnePlay(item.id)" class="btn-play"></span>
+            <span @click="handlerOnePush(item.id)" class="btn-addlist"></span>
           </div>
           <span class="ar-name">{{ item.ar[0].name }}</span>
           <span class="al-name">{{ item.al.name }}</span>
@@ -30,16 +30,15 @@
     <div class="album-list">
       <template v-for="item in albumData" :key="item.id">
         <div class="card">
-          <CardCover :coverImgUrl="item.picUrl" />
+          <CardCover @click="JumpAlbumDetail(item.id)" :coverImgUrl="item.picUrl" />
           <div class="card-title">{{ item.name }}</div>
-          <div class="card-name">{{ item.artist.name }}</div>
         </div>
       </template>
     </div>
     <h3>相似歌手</h3>
     <div class="simi-list">
       <template v-for="item in simiData.slice(0, 5)" :key="item.id">
-        <singer-item :img="item.picUrl" :name="item.name" />
+        <singer-item :img="item.picUrl" :name="item.name" @imgClick="JumpSimiSinger(item.id)" @nameClick="JumpSimiSinger(item.id)"/>
       </template>
     </div>
   </div>
@@ -53,6 +52,8 @@ import {
 } from "../../../server/page_request/singer_request";
 import CardCover from "../../../components/songsheet-cover.vue";
 import SingerItem from "../../../components/singer-item.vue";
+import {mapActions,mapMutations,mapState} from 'vuex'
+
 export default {
   data() {
     return {
@@ -64,7 +65,18 @@ export default {
   created() {
     this.getPageData(this.$route.query.id);
   },
+  watch:{
+    $route(newVal) {
+    this.getPageData(newVal.query.id);
+
+    }
+  },
+   computed:{
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  },  
   methods: {
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
     getPageData(id) {
       requestSingerHotSongs(id).then((res) => {
         this.listData = res.songs;
@@ -76,6 +88,33 @@ export default {
         this.albumData = res.hotAlbums;
       });
     },
+    handlerAllPlayClick() {
+      this.changePlayList([...this.listData])
+      this.changeCurrentSong(this.listData[0])
+      this.changeCurrentSongIndex(0)
+    },
+    handlerOnePlay(id) {
+      this.getSongDetail(id)
+    },
+    handlerOnePush(id) {
+      this.getSongDetailPush(id)
+    },
+    JumpAlbumDetail(id) {
+      this.$router.push({
+        path:"/layout/album/albumDetail",
+        query:{
+          id
+        }
+      })
+    },
+    JumpSimiSinger(id) {
+      this.$router.push({
+        path:"/layout/singer/singerDetail",
+        query:{
+          id
+        }
+      })
+    }
   },
   components: {
     CardCover,
@@ -262,10 +301,7 @@ export default {
           color: #f77870;
         }
       }
-      .card-name {
-        font-size: 14px;
-        color: #999;
-      }
+
     }
   }
   .simi-list {

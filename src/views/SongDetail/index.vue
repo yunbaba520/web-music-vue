@@ -14,8 +14,8 @@
         </div>
         <div class="al">所属专辑:{{songInfo.al.name}}</div>
         <div class="btns">
-          <span class="play" @click="jumpPlay">播放</span>
-          <span class="add">加入列表</span>
+          <span class="play" @click="handlerPlay">播放</span>
+          <span class="add" @click="handlerAddList">加入列表</span>
           <span class="collect">收藏</span>
         </div>
       </div>
@@ -32,7 +32,12 @@
       <div class="recommend">
         <div class="simi">相关推荐</div>
         <template v-for="item in simiSongs" :key="item.id">
-          <SongRecommend :id="item.id" :img="item.album.picUrl" :name="item.artists[0].name" :title="item.name"/>
+          <SongRecommend :id="item.id" 
+                          :img="item.album.picUrl" 
+                          :name="item.artists[0].name" 
+                          :title="item.name"
+                          @clickAuthorEmit="JumpAuthor(item.artists[0].id)"
+                          @clickSongEmit="JumpSong(item.id)"/>
         </template>
       </div>
     </div>
@@ -44,6 +49,8 @@
 import SongRecommend from '../../components/song-recommend.vue'
 import { requestSongDetail,requestSongLyric,requestSongSimi } from "../../server/page_request/song_request.js";
 import {parseLyric} from '../../utils/parseLyric'
+import {mapActions,mapMutations,mapState} from 'vuex'
+
 export default {
   data() {
     return {
@@ -55,26 +62,58 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
-    requestSongDetail(this.id).then((res) => {
-      this.songInfo = res.songs[0];
-    });
-    requestSongLyric(this.id).then(res=>{
-      const parseLyricData = parseLyric(res.lrc.lyric)
-      this.lyricData =parseLyricData
-    })
-    requestSongSimi(this.id).then(res=>{
-      this.simiSongs = res.songs
-    })
+    this.getPageData()
   },
+  watch:{
+    $route(newVal){
+      this.id = newVal.query.id;
+      this.getPageData()
+    }
+  },
+  computed:{
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  }, 
   components:{
     SongRecommend
   },
   methods:{
-    jumpPlay() {
-      let routeData = this.$router.resolve({ path:'/play'});
-      // window.open(routeData.href, 'newWindow', 'top=0'); //打开新窗口
-      window.open(routeData.href, '_blank'); //打开新标签
-    }
+    getPageData() {
+      requestSongDetail(this.id).then((res) => {
+      this.songInfo = res.songs[0];
+      });
+      requestSongLyric(this.id).then(res=>{
+        const parseLyricData = parseLyric(res.lrc.lyric)
+        this.lyricData =parseLyricData
+      })
+      requestSongSimi(this.id).then(res=>{
+        this.simiSongs = res.songs
+        console.log(res);
+      })
+    },
+    handlerPlay() {
+      this.getSongDetail(this.id)
+    },
+    handlerAddList() {
+      this.getSongDetailPush(this.id)
+    },
+    JumpAuthor(id) {
+      this.$router.push({
+        path:'/layout/singer/singerDetail',
+        query:{
+          id
+        }
+      })
+    },
+    JumpSong(id) {
+      this.$router.push({
+        path:'/layout/songDetail',
+        query:{
+          id
+        }
+      })
+    },
+    ...mapActions(["getSongDetail","getSongDetailPush"]),
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"])
   }
 };
 </script>

@@ -3,7 +3,7 @@
     <div class="ranking">
       <div class="header">
         <div class="header-bg"></div>
-        <span class="header-more">更多</span>
+        <span class="header-more" @click="JumpRankingList">更多</span>
       </div>
       <div class="toplist-list">
         <ToplistItem :toplistData="upData"></ToplistItem>
@@ -54,6 +54,13 @@ export default {
   },
   components:{
     ToplistItem
+  },
+  methods:{
+    JumpRankingList() {
+      this.$router.push({
+        path:'/layout/toplist',
+      })
+    }
   }
 };
 </script>

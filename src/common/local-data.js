@@ -30,24 +30,24 @@ export const headerLinks = [
 export const myMusicLinks = [
   {
     title: "最近常听",
-    link: "/myMusic/heard",
+    link: "/layout/myMusic/heard",
   },
 
   {
     title: "我创建的歌单",
-    link: "/myMusic/created",
+    link: "/layout/myMusic/created",
   },
   {
     title: "我收藏的歌单",
-    link: "/myMusic/collect",
+    link: "/layout/myMusic/collect",
   },
   {
     title: "关注",
-    link: "/myMusic/follows",
+    link: "/layout/myMusic/follows",
   },
   {
     title: "粉丝",
-    link: "/myMusic/followeds",
+    link: "/layout/myMusic/followeds",
   },
   
 ];

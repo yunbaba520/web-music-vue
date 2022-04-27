@@ -1,196 +1,316 @@
 <template>
-  <div class="play-page" style="">
-    <div>xx</div>
-    <div class="play-bar" v-if="currentSong.al">
-      <div class="bar">
-        <div class="control">
-          <span class="prev"></span>
-          <span :class="['play',isPlaying?'play-true':'play-false']" @click="handlerPlayBtnClick"></span>
-          <span class="next"></span>
+  <div class="play-page" >
+    <div class="paly-page-bg" :style="{ background: `url(${bgUrl}) center center/6000px ` }"></div>
+    <div class="gohome" @click="JumpHome">218音乐网</div>
+    <div class="content">
+      <div class="left">
+        <div class="list-table">
+        <div class="list-title">
+          <span class="title-1">歌曲</span>
+          <span class="title-2">歌手</span>
+          <span class="title-3">专辑</span>
+          <span class="title-4">时长</span>
         </div>
-        <div class="play-info">
-          <img
-            class="cover"
-            :src="currentSong.al.picUrl"
-            alt=""
-          />
-          <div class="info">
-            <div class="title">{{currentSong.name}}-
-              <template v-for="ar in currentSong.ar" :key="ar.id">
-                <span>{{ar.name}}&nbsp;&nbsp;&nbsp;</span>
-              </template>
+        <el-scrollbar height="450px">
+          <template v-for="(item, index) in playList" :key="item.id">
+          <div :class="['item',currentSongIndex==index?'activeItem':'']">
+            <span class="index">{{ index + 1 }}</span>
+            <span class="song-name">{{ item.name }}</span>
+            <div class="btns">
+              <span class="btn-play" @click="handlerPlayClick(index)"></span>
+              <span class="btn-addlist" @click="handlerDeleteClick(index)"></span>
             </div>
-            <div class="progress-wrap">
-              <div class="progress"><el-slider v-model="progress" @input="handlerSlideChange" @change="handlerSlideEnd"/></div>
-              <div class="time">{{formatTimeLength(progressTime)}}/{{formatTimeLength(currentSong.dt)}}</div>
-            </div>
+            <span class="ar-name">
+              <template v-for="ar in item.ar" :key="ar.id"
+                >{{ ar.name }}&nbsp;&nbsp;&nbsp;</template
+              >
+            </span>
+            <span class="al-name">{{ item.al.name }}</span>
+            <span class="time">{{ item.dt }}</span>
           </div>
-        </div>
-        <div class="operator">
-          <span class="loop"></span>
-          <span class="like"></span>
-        </div>
+        </template>
+        </el-scrollbar>
+        
+      </div>
+      </div>
+      <div class="right">
+        <img class="cover" :src="bgUrl" alt="">
+         
+          <div class="list-lyric">
+            <el-scrollbar height="350px">
+              <template v-for="lyric in lyricData" :key="lyric.time">
+                <div class="lyric">{{lyric.text}}</div>
+              </template>
+            </el-scrollbar>
+          </div>
+        
+        
       </div>
     </div>
-    <audio ref="audioRef" @timeupdate="handleTimeUpdate"/>
   </div>
 </template>
 
 <script>
-import {formatTimeLength,getSongPlay} from '../../utils/format'
-import {mapState,mapActions} from 'vuex'
+import {requestSongLyric} from '../../server/page_request/song_request'
+import {parseLyric} from '../../utils/parseLyric'
+import {mapState,mapMutations,mapActions} from 'vuex'
 export default {
   data() {
     return {
-      progress:0,
-      progressTime:0,
-      currentTime:0,//单位秒
-      isChangingSlider:false,
-      isPlaying:false,
-    }
-  },
-  created(){
-    this.getSongDetail(1940771892)
-  },
-  mounted(){
-    
-  },
-  watch:{
-    currentSong(newVal,oldVal){
-      this.$refs.audioRef.src = this.getSongPlay(newVal.id)
+      bgUrl:'',
+      lyricData:[]
     }
   },
   computed:{
-    ...mapState(["currentSong"])
+    ...mapState(["playList","currentSong","currentSongIndex"])
+  },
+  mounted(){
+    if (this.currentSong.al) {
+      this.bgUrl = this.currentSong.al.picUrl
+      requestSongLyric(this.currentSong.id).then(res=>{
+        const parseLyricData = parseLyric(res.lrc.lyric)
+        this.lyricData =parseLyricData
+      })
+    }
+  },
+  watch:{
+    currentSong(newVal,oldVal){
+      this.bgUrl= newVal.al.picUrl
+      requestSongLyric(this.currentSong.id).then(res=>{
+        const parseLyricData = parseLyric(res.lrc.lyric)
+        this.lyricData =parseLyricData
+      })
+    }
   },
   methods:{
-    handlerPlayBtnClick() {
-      this.isPlaying?this.$refs.audioRef.pause():this.$refs.audioRef.play()
-      this.isPlaying = !this.isPlaying
+    handlerDeleteClick(index){
+      const nowPlayList = [...this.playList]
+      nowPlayList.splice(index,1)
+      this.changePlayList(nowPlayList)
     },
-    handleTimeUpdate(e) {
-      if (!this.isChangingSlider) {
-        this.currentTime =  e.target.currentTime,
-        this.progress = this.currentTime*1000/this.currentSong.dt*100
-        this.progressTime = this.currentTime*1000
-      }
-      
+    handlerPlayClick(index){
+      this.changeCurrentSong(this.playList[index])
+      this.changeCurrentSongIndex(index)
     },
-    handlerSlideChange(val){
-      this.isChangingSlider = true
-      this.progressTime = val/100*this.currentSong.dt
+    JumpHome() {
+      this.$router.push({
+        path: "/layout/home",
+      });
     },
-    handlerSlideEnd(val) {
-      this.$refs.audioRef.currentTime = val/100*this.currentSong.dt/1000
-      this.isChangingSlider = false
-      //拖动抬起后播放
-      if (!this.isPlaying) {
-        this.handlerPlayBtnClick()
-      }
-    },
-    ...mapActions(["getSongDetail"]),
-    formatTimeLength,
-    getSongPlay
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"])
   }
 };
 </script>
 
 <style lang="less" scoped>
 .play-page {
-  width: 1300px;
-  margin: 0 auto;
-  .play-bar {
-    position: fixed;
+  width: 100%;
+  height: 720px;
+  position: relative;
+  // background-color: #888;    
+  .paly-page-bg {
+    background-color: #888;
+    position: absolute;
+    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    background-color: #888;
-    .bar {
-      width: 1200px;
-      height: 50px;
-      margin: 0 auto;
-      display: flex;
-      .control {
-        width: 150px;
+    filter: blur(95px);
+    opacity: 0.7;
+    z-index: -1;
+  }
+  .gohome {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #333;
+    width: 140px;
+    font-size: 28px;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover {
+      color: #000;
+    }
+  }
+  .content {
+    padding-top: 80px;
+    width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    .left {
+      width: 900px;
+      .list-table {
+      width: 900px;
+      .list-title {
+        height: 50px;
+        color: #333;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        .prev,
-        .next {
-          width: 19px;
-          height: 20px;
-          background: url("../../assets/img/player_play.png") no-repeat;
-          background-size: 132px 1000px;
-          cursor: pointer;
+        padding: 0 17px;
+        .title-1 {
+          margin-left: 36px;
+          width: 350px;
+          padding: 0 15px;
         }
-        .prev {
-          background-position: 0 -30px;
+        .title-2 {
+          width: 120px;
+          padding: 0 15px;
         }
-        .next {
-          background-position: 0 -52px;
+        .title-3 {
+          width: 170px;
+          padding: 0 15px;
         }
-        .play {
-          width: 21px;
-          height: 29px;
-          background: url("../../assets/img/player_play.png") no-repeat;
-          background-size: 132px 1000px;
-          cursor: pointer;
-        }
-        .play-true {
-          background-position: -30px 0;
-        }
-        .play-false {
-          background-position: 0 0;
+        .title {
+          width: 80px;
         }
       }
-      .play-info {
-        margin-left: 50px;
+      .item {
         display: flex;
+        height: 50px;
+        color: #333;
+        font-size: 14px;
         align-items: center;
-        .cover {
-          width: 45px;
-          height: 45px;
-          margin-right: 15px;
+        padding: 0 17px;
+        .index {
+          width: 36px;
+          color: #333;
         }
-        .info {
-          .title {
-            color: #444;
+        .song-name {
+          width: 350px;
+          padding: 0 15px;
+          /* 显示一行 */
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          display: -moz-box;
+          -moz-line-clamp: 1;
+          -moz-box-orient: vertical;
+          word-wrap: break-word;
+          word-break: break-all;
+          white-space: normal;
+          overflow: hidden;
+          &:hover {
+            color: #f77870;
+            cursor: pointer;
           }
-          .progress-wrap {
+        }
+        .ar-name {
+          width: 120px;
+          padding: 0 15px;
+          /* 显示一行 */
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          display: -moz-box;
+          -moz-line-clamp: 1;
+          -moz-box-orient: vertical;
+          word-wrap: break-word;
+          word-break: break-all;
+          white-space: normal;
+          overflow: hidden;
+          &:hover {
+            color: #f77870;
+            cursor: pointer;
+          }
+        }
+        .al-name {
+          width: 170px;
+          padding: 0 15px;
+          /* 显示一行 */
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          display: -moz-box;
+          -moz-line-clamp: 1;
+          -moz-box-orient: vertical;
+          word-wrap: break-word;
+          word-break: break-all;
+          white-space: normal;
+          overflow: hidden;
+          &:hover {
+            color: #f77870;
+            cursor: pointer;
+          }
+        }
+        .time {
+          color: #333;
+          width: 80px;
+        }
+        &:hover {
+          .song-name {
+            width: 260px;
+          }
+          .btns {
+            width: 90px;
+            height: 50px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            .btn-play {
+              width: 36px;
+              height: 36px;
+              background: url("../../assets/img/icon_play.png") no-repeat;
+              background-size: 200px 320px;
+              background-position: 0 0;
+              cursor: pointer;
+              &:hover {
+              background-position: -120px 0;
 
-            .progress {
-              width: 600px;
+              }
             }
-            .time {
-              font-size: 14px;
-              color: #444;
+            .btn-addlist {
+              width: 36px;
+              height: 36px;
+              background: url("../../assets/img/icon_play.png") no-repeat;
+              background-size: 200px 320px;
+              background-position: 0 -160px;
+              cursor: pointer;
+              &:hover {
+              background-position: -120px -160px;
+
+              }
             }
           }
         }
       }
-      .operator {
-        margin-left: 30px;
-        width: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .loop{
-          width: 26px;
-          height: 25px;
-          background: url("../../assets/img/player_play.png");
-          background-size: 132px 1000px;
-          background-position: 0 -205px;
+    }
+    .activeItem {
+      .song-name,.ar-name,.al-name,.time {
+        color: #fff;
+      }
+      &:hover {
+          
+        .btns {
+          .btn-play {
+            background-position: 0 -200px !important;
+            &:hover {
+            background-position: -120 -200px !important;
+
+            }
+          }
         }
-        .like {
-          width: 23px;
-          height: 21px;
-          background: url("../../assets/img/player_play.png");
-          background-size: 132px 1000px;
-          background-position: 0 -96px;
+      }
+    }
+    }
+    .right {
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .cover {
+        width: 180px;
+        height: 180px;
+      }
+      .list-lyric {
+        margin-top: 20px;
+        .lyric {
+          text-align: center;
+          height: 25px;
+          line-height: 25px;
         }
       }
     }
