@@ -2,6 +2,7 @@
   <div class="play-page" >
     <div class="paly-page-bg" :style="{ background: `url(${bgUrl}) center center/6000px ` }"></div>
     <div class="gohome" @click="JumpHome">218音乐网</div>
+    <div class="delete-list" v-if="playList.length!==0" @click="handlerDeletePlayList">清空播放列表</div>
     <div class="content">
       <div class="left">
         <div class="list-table">
@@ -26,7 +27,7 @@
               >
             </span>
             <span class="al-name">{{ item.al.name }}</span>
-            <span class="time">{{ item.dt }}</span>
+            <span class="time">{{formatTimeLength(item.dt)  }}</span>
           </div>
         </template>
         </el-scrollbar>
@@ -53,6 +54,7 @@
 <script>
 import {requestSongLyric} from '../../server/page_request/song_request'
 import {parseLyric} from '../../utils/parseLyric'
+import {formatTimeLength} from '../../utils/format'
 import {mapState,mapMutations,mapActions} from 'vuex'
 export default {
   data() {
@@ -92,12 +94,16 @@ export default {
       this.changeCurrentSong(this.playList[index])
       this.changeCurrentSongIndex(index)
     },
+    handlerDeletePlayList() {
+      this.changePlayList([])
+    },
     JumpHome() {
       this.$router.push({
         path: "/layout/home",
       });
     },
-    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"])
+    ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    formatTimeLength
   }
 };
 </script>
@@ -130,6 +136,21 @@ export default {
     cursor: pointer;
     &:hover {
       color: #000;
+    }
+  }
+  .delete-list {
+    position: absolute;
+    left: 880px;
+    top: 50px;
+    color: #999;
+    width: 100px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    border: 1px solid #666;
+    cursor: pointer;
+    &:hover {
+      color: #666;
     }
   }
   .content {
@@ -280,7 +301,7 @@ export default {
     }
     .activeItem {
       .song-name,.ar-name,.al-name,.time {
-        color: #fff;
+        color: #f77870;
       }
       &:hover {
           
