@@ -39,7 +39,7 @@
                   >
                 </span>
                 <span class="al-name">{{ item.al.name }}</span>
-                <span class="time">{{ item.dt }}</span>
+                <span class="time">{{formatTimeLength( item.dt) }}</span>
               </div>
             </template>
           </div>
@@ -84,6 +84,7 @@ import { Search } from "@element-plus/icons-vue";
 import CardCover  from '../../components/songsheet-cover.vue'
 import SingerItem from '../../components/singer-item.vue'
 import {requestHotSearch,requestSearch} from '../../server/page_request/search_request'
+import {formatTimeLength} from '../../utils/format'
 import {mapActions,mapMutations,mapState} from 'vuex'
 
   export default {
@@ -122,6 +123,7 @@ import {mapActions,mapMutations,mapState} from 'vuex'
     methods:{
       ...mapActions(["getSongDetail","getSongDetailPush"]),
       ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+      formatTimeLength,
       getDataByKeyword(keyword) {
         requestSearch(keyword,1).then(res=>{
           this.searchDataSong =  res.result.songs

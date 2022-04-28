@@ -69,7 +69,7 @@
               >
             </span>
             <span class="al-name">{{ item.al.name }}</span>
-            <span class="time">{{ item.dt }}</span>
+            <span class="time">{{formatTimeLength(item.dt)  }}</span>
           </div>
         </template>
       </div>
@@ -81,7 +81,7 @@
 import { requestTopList } from "../../server/page_request/toplist_request";
 import { requestRankingData } from "../../server/page_request/home_request";
 import { Timer } from "@element-plus/icons-vue";
-import { formatTime } from "../../utils/format";
+import { formatTime,formatTimeLength } from "../../utils/format";
 import {mapActions,mapMutations,mapState} from 'vuex'
 export default {
   data() {
@@ -142,6 +142,7 @@ export default {
       this.changePlayList(newPlayList)
     },
     formatTime,
+    formatTimeLength,
     ...mapActions(["getSongDetail","getSongDetailPush"]),
     ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"])
   },

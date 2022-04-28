@@ -22,7 +22,7 @@
             </div>
             <span class="ar-name">{{ item.song.ar[0].name }}</span>
             <span class="al-name">{{ item.song.al.name }}</span>
-            <span class="time">{{ item.song.dt }}</span>
+            <span class="time">{{formatTimeLength(item.song.dt)  }}</span>
             <div class="progress"><el-progress :text-inside="true" :stroke-width="26" :percentage="item.score"  color="#f77870"/></div>
           </div>
         </template>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import {formatTimeLength} from '../../../utils/format'
 import {mapActions,mapMutations,mapState} from 'vuex'
 
 export default {
@@ -51,6 +52,7 @@ export default {
   methods: {
     ...mapActions(["getSongDetail","getSongDetailPush"]),
     ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    formatTimeLength,
     handlerSongPlay(id) {
       this.getSongDetail(id)
     },

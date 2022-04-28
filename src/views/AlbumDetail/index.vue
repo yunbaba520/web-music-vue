@@ -42,7 +42,7 @@
             <template v-for="ar in item.ar" :key="ar.id">{{ar.name}}&nbsp;&nbsp;&nbsp;</template>
           </span>
           <span class="al-name">{{ item.al.name }}</span>
-          <span class="time">{{ item.dt }}</span>
+          <span class="time">{{formatTimeLength(item.dt)  }}</span>
         </div>
       </template>
     </div>
@@ -51,7 +51,7 @@
 
 <script>
 import { requestAlbumDetail } from "../../server/page_request/album_request";
-import {formatTime} from '../../utils/format'
+import {formatTime,formatTimeLength} from '../../utils/format'
 import {mapActions,mapMutations,mapState} from 'vuex'
 
 export default {
@@ -72,6 +72,7 @@ export default {
   },
   methods:{
     formatTime,
+    formatTimeLength,
     ...mapActions(["getSongDetail","getSongDetailPush"]),
     ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
     //播放全部，直接把playlist替换掉

@@ -22,7 +22,7 @@
           </div>
           <span class="ar-name">{{ item.ar[0].name }}</span>
           <span class="al-name">{{ item.al.name }}</span>
-          <span class="time">{{ item.dt }}</span>
+          <span class="time">{{formatTimeLength(item.dt)  }}</span>
         </div>
       </template>
     </div>
@@ -32,6 +32,7 @@
 
 <script>
 import { requestSingerAllSongs } from "../../../server/page_request/singer_request";
+import {formatTimeLength} from '../../../utils/format'
 import {mapActions,mapMutations,mapState} from 'vuex'
 
 export default {
@@ -53,6 +54,7 @@ export default {
   methods:{
     ...mapActions(["getSongDetail","getSongDetailPush"]),
     ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    formatTimeLength,
     handlerAllPlayClick() {
       this.changePlayList([...this.allData])
       this.changeCurrentSong(this.allData[0])

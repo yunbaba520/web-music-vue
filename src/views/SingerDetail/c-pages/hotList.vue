@@ -22,7 +22,7 @@
           </div>
           <span class="ar-name">{{ item.ar[0].name }}</span>
           <span class="al-name">{{ item.al.name }}</span>
-          <span class="time">{{ item.dt }}</span>
+          <span class="time">{{formatTimeLength(item.dt) }}</span>
         </div>
       </template>
     </div>
@@ -52,6 +52,7 @@ import {
 } from "../../../server/page_request/singer_request";
 import CardCover from "../../../components/songsheet-cover.vue";
 import SingerItem from "../../../components/singer-item.vue";
+import {formatTimeLength} from '../../../utils/format'
 import {mapActions,mapMutations,mapState} from 'vuex'
 
 export default {
@@ -77,6 +78,7 @@ export default {
   methods: {
     ...mapActions(["getSongDetail","getSongDetailPush"]),
     ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
+    formatTimeLength,
     getPageData(id) {
       requestSingerHotSongs(id).then((res) => {
         this.listData = res.songs;

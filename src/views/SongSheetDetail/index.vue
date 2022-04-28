@@ -43,7 +43,7 @@
             </div>
             <span class="ar-name">{{ item.ar[0].name }}</span>
             <span class="al-name">{{ item.al.name }}</span>
-            <span class="time">{{ item.dt }}</span>
+            <span class="time">{{formatTimeLength(item.dt)  }}</span>
           </div>
         </template>
         <div class="down">
@@ -70,7 +70,7 @@ import { requestRankingData } from "../../server/page_request/home_request";
 import { requestSongSheetRecommend } from "../../server/page_request/songsheet_request";
 import { Avatar } from "@element-plus/icons-vue";
 import SongsheetRecommend from "../../components/songsheet-recommend.vue";
-import { formatCount } from "../../utils/format";
+import { formatCount ,formatTimeLength} from "../../utils/format";
 import {mapActions,mapMutations,mapState} from 'vuex'
 
 export default {
@@ -94,6 +94,7 @@ export default {
     ...mapActions(["getSongDetail","getSongDetailPush"]),
     ...mapMutations(["changePlayList","changeCurrentSong","changeCurrentSongIndex"]),
     formatCount,
+    formatTimeLength,
     handleClickSongsheet(id) {
       this.getDataById(id);
     },
@@ -168,6 +169,7 @@ export default {
           background-color: #f77870;
           border: 1px solid #f77870;
           color: #fff;
+          cursor: pointer;
         }
       }
       .introduce {
