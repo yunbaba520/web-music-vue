@@ -72,7 +72,11 @@ export default {
       nowLyricIndex:0,
     };
   },
-
+  mounted() {
+    if (this.currentSong.id) {
+      this.$refs.audioRef.src = this.getSongPlay(this.currentSong.id);
+    }
+  },
   watch: {
     currentSong(newVal, oldVal) {
       this.$refs.audioRef.src = this.getSongPlay(newVal.id);
@@ -83,7 +87,6 @@ export default {
       })
       requestSongLyric(newVal.id).then(res=>{
         this.lyricList = parseLyric(res.lrc.lyric)
-        console.log(this.lyricList);
       })
     },
   },

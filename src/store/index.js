@@ -65,7 +65,9 @@ export default createStore({
     },
     /* 播放器 */
     changePlayList(state,payload) {
-      state.playList = payload
+      //数组去重
+      const newList = [...new Set(payload)] 
+      state.playList = newList
     },
     changeCurrentSong(state,payload) {
       state.currentSong = payload
