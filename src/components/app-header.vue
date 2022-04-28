@@ -18,7 +18,7 @@
         </template>
       </div>
       <div class="nav-input">
-        <el-input v-model="inputValue" placeholder="Type something">
+        <el-input v-model="inputValue" placeholder="搜索音乐" @change="handlerInputChange">
           <template #suffix>
             <el-icon class="el-input__icon"><search /></el-icon>
           </template>
@@ -96,6 +96,7 @@ export default {
     return {
       headerLinks,
       inputValue: "",
+      inputSearchData:[],
       dialogFormVisible: false,
       activeName: "phone",
       formPhone: {
@@ -129,6 +130,7 @@ export default {
       },
     };
   },
+
   computed:{
     ...mapState(["loginInfo","isLogin"])
   },
@@ -163,6 +165,14 @@ export default {
     },
     resetEmil() {
       this.$refs.formRefEmil.resetFields()
+    },
+    handlerInputChange() {
+      this.$router.push({
+        path:"/layout/search",
+        query:{
+          keyword:this.inputValue
+        }
+      })
     },
     ...mapActions(["getLoginInfoByPhone","getLoginInfoByEmail"]),
 

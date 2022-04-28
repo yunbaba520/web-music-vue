@@ -12,7 +12,10 @@
           <span class="next" @click="handlerPrevNext(1)"></span>
         </div>
         <div class="play-info">
-          <img @click="JumpPlayPage" class="cover" :src="currentSong.al.picUrl" alt="" />
+          <img @click="JumpPlayPage" 
+                :class="['cover',isPlaying?'cover-running':'cover-paused']" 
+                :src="currentSong.al.picUrl" 
+                alt="" />
           <div class="info">
             <div class="title">
               {{ currentSong.name }}-
@@ -43,13 +46,18 @@
           <span class="like"></span>
           <span class="list" @click="JumpPlayPage"><span class="num">{{playList.length}}</span></span>
         </div>
+        <div class="lyric">
+          {{nowLyric}}
+        </div>
       </div>
     </div>
     <audio ref="audioRef" @timeupdate="handleTimeUpdate" @ended="handlerEnded" />
   </div>
 </template>
 <script>
+import {requestSongLyric} from './server/page_request/song_request'
 import { formatTimeLength, getSongPlay } from "./utils/format";
+import {parseLyric} from './utils/parseLyric'
 import { mapState, mapActions,mapMutations } from "vuex";
 export default {
   data() {
@@ -59,6 +67,9 @@ export default {
       currentTime: 0, //单位秒
       isChangingSlider: false,
       isPlaying: false,
+      lyricList:[],
+      nowLyric:"",
+      nowLyricIndex:0,
     };
   },
 
@@ -69,6 +80,10 @@ export default {
         this.isPlaying = true
       }).catch(err=>{
         this.isPlaying = false
+      })
+      requestSongLyric(newVal.id).then(res=>{
+        this.lyricList = parseLyric(res.lrc.lyric)
+        console.log(this.lyricList);
       })
     },
   },
@@ -85,6 +100,22 @@ export default {
         this.currentTime = e.target.currentTime
         this.progress =((this.currentTime * 1000) / this.currentSong.dt) * 100
         this.progressTime = this.currentTime * 1000;
+      }
+      let index = 0
+      for (; index < this.lyricList.length; index++) {
+        if (e.target.currentTime*1000<this.lyricList[index].time) {
+          break
+        }
+      }
+      let timeIndex = index-1
+      if(timeIndex!==this.nowLyricIndex) {
+        if (timeIndex===-1) {
+          this.nowLyricIndex = timeIndex
+          this.nowLyric = ""
+        }else {
+          this.nowLyricIndex = timeIndex
+          this.nowLyric = this.lyricList[timeIndex].text
+        }
       }
     },
     handlerSlideChange(val) {
@@ -149,11 +180,13 @@ export default {
   bottom: 0;
   width: 100%;
   height: 50px;
-  background-color: #888;
+  background-color: #ddd;
+  border-top: 1px solid #999;
+  box-shadow: 0 -3px 3px rgba(0, 0, 0, .3);
   .bar {
-    width: 1200px;
+    width: 1400px;
     height: 50px;
-    margin: 0 auto;
+    margin-left: 100px;
     display: flex;
     .control {
       width: 150px;
@@ -192,11 +225,30 @@ export default {
       margin-left: 50px;
       display: flex;
       align-items: center;
+      @keyframes albumA{
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
       .cover {
-        width: 45px;
-        height: 45px;
+        width: 48px;
+        height: 48px;
         margin-right: 15px;
         cursor: pointer;
+        border-radius: 50%;
+        position: relative;
+        top: -10px;
+      animation: albumA 16s linear infinite;
+
+      }
+      .cover-running {
+        animation-play-state: running;
+      }
+      .cover-paused {
+        animation-play-state: paused;
       }
       .info {
         .title {
@@ -267,6 +319,13 @@ export default {
           color: #ff6347;
         }
       }
+    }
+    .lyric {
+      margin-left: 20px;
+      width: 280px;
+      color:		#EE3B3B;
+      text-align: center;
+      line-height: 50px;
     }
   }
 }

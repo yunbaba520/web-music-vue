@@ -161,6 +161,12 @@ const routes = [
             /* webpackChunkName: "SongDetail" */ "../views/SongDetail/index.vue"
           ),
       },
+      {
+        path:"search",
+        name:"Search",
+        component: () =>
+          import(/* webpackChunkName: "Search" */ "../views/Search/index.vue"),
+      }
     ],
   },
 
