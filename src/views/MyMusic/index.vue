@@ -82,12 +82,15 @@ export default {
     ...mapState(["isLogin", "userInfo"]),
   },
   watch: {
-    isLogin(newVal, oldVal) {
-      if (newVal) {
+    isLogin:{
+      handler:function(newVal,oldVal) {
+        if (newVal) {
         this.getUserInfo();
         this.getUserInfoOuther();
       }
-    },
+      },
+      immediate:true
+    }
   },
   methods: {
     ...mapActions(["getUserInfo", "getUserInfoOuther"]),

@@ -103,6 +103,7 @@ import {mapActions,mapMutations,mapState} from 'vuex'
       requestHotSearch().then(res=>{
         this.hotData = res.result.hots
       })
+      //传过来关键字存在且不为空
       if (this.$route.query.keyword && this.$route.query.keyword !== '') {
         this.getDataByKeyword(this.$route.query.keyword)
       }

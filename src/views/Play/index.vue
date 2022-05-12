@@ -142,15 +142,15 @@ export default {
     position: absolute;
     left: 880px;
     top: 50px;
-    color: #999;
+    color: #666;
     width: 100px;
     text-align: center;
     font-size: 16px;
     font-weight: 700;
-    border: 1px solid #666;
+    border: 1px solid #444;
     cursor: pointer;
     &:hover {
-      color: #666;
+      color: #333;
     }
   }
   .content {

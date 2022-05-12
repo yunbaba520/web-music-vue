@@ -89,7 +89,7 @@
 <script>
 import { Search } from "@element-plus/icons-vue";
 import { headerLinks } from "../common/local-data";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions,mapMutations } from "vuex";
 
 export default {
   data() {
@@ -130,7 +130,13 @@ export default {
       },
     };
   },
-
+  created() {
+    const infoStr =  localStorage.getItem("musicLoginInfo")
+    const loginInfoByLocal = JSON.parse(infoStr)
+    if (loginInfoByLocal) {
+      this.changeLoginInfo(loginInfoByLocal)
+    }
+  },
   computed:{
     ...mapState(["loginInfo","isLogin"])
   },
@@ -175,7 +181,7 @@ export default {
       })
     },
     ...mapActions(["getLoginInfoByPhone","getLoginInfoByEmail"]),
-
+    ...mapMutations(["changeLoginInfo"])
   },
 };
 </script>

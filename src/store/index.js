@@ -115,6 +115,8 @@ export default createStore({
       requestPhoneLogin(...payload).then((res) => {
         if (res.code == 200) {
           context.commit("changeLoginInfo", res);
+          const infoStr  = JSON.stringify(res)
+          localStorage.setItem("musicLoginInfo",infoStr)
         }
       });
     },
@@ -180,7 +182,6 @@ export default createStore({
       }else {
         //不存在
         requestSongDetail(payload).then(res=>{
-          console.log(res,"song");
           const song = res.songs && res.songs[0]
           if(!song)return
           const newPlayList = [...playList]
