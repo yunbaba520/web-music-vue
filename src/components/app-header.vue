@@ -25,7 +25,18 @@
         </el-input>
       </div>
       <div class="nav-login" v-if="!isLogin"  @click="dialogFormVisible = true">登录</div>
-      <div class="login-info" v-else> <el-avatar :size="50" :src="loginInfo.profile.avatarUrl" /></div>
+      <div class="login-info" v-else> 
+        <el-dropdown>
+          <el-avatar :size="50" :src="loginInfo.profile.avatarUrl" />
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handlerJumpMyself">个人主页</el-dropdown-item>
+              <el-dropdown-item @click="handlerSignOut">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        
+      </div>
       
     </div>
 
@@ -135,6 +146,7 @@ export default {
     const loginInfoByLocal = JSON.parse(infoStr)
     if (loginInfoByLocal) {
       this.changeLoginInfo(loginInfoByLocal)
+      this.changeIsLogin(true)
     }
   },
   computed:{
@@ -180,8 +192,18 @@ export default {
         }
       })
     },
+    handlerJumpMyself() {
+      this.$router.push({
+        path:'/layout/myMusic/heard'
+      })
+    },
+    handlerSignOut() {
+      localStorage.setItem("musicLoginInfo",null)
+      this.changeLoginInfo({})
+      this.changeIsLogin(false)
+    },
     ...mapActions(["getLoginInfoByPhone","getLoginInfoByEmail"]),
-    ...mapMutations(["changeLoginInfo"])
+    ...mapMutations(["changeLoginInfo",'changeIsLogin'])
   },
 };
 </script>

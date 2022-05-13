@@ -1,7 +1,7 @@
 <template>
   <AppHeader />
   <router-view v-slot="props">
-      <component :is="props.Component"></component>
+      <component class="component" :is="props.Component"></component>
   </router-view>
   <AppFooter/>
 </template>
@@ -18,5 +18,7 @@ export default {
 };
 </script>
 <style lang="less">
-
+.component {
+  min-height: 420px;
+}
 </style>

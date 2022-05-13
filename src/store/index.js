@@ -35,7 +35,9 @@ export default createStore({
   mutations: {
     changeLoginInfo(state, payload) {
       state.loginInfo = payload;
-      state.isLogin = true;
+    },
+    changeIsLogin(state,payload) {
+      state.isLogin = payload
     },
     /* 用户信息 */
     changeUserInfo(state, payload) {
@@ -115,6 +117,7 @@ export default createStore({
       requestPhoneLogin(...payload).then((res) => {
         if (res.code == 200) {
           context.commit("changeLoginInfo", res);
+          context.commit("changeIsLogin",true)
           const infoStr  = JSON.stringify(res)
           localStorage.setItem("musicLoginInfo",infoStr)
         }
@@ -124,6 +127,8 @@ export default createStore({
       requestEmailLogin(...payload).then((res) => {
         if (res.code == 200) {
           context.commit("changeLoginInfo", res);
+          context.commit("changeIsLogin",true)
+
         }
       });
     },
