@@ -1,7 +1,7 @@
 <template>
   <div class="songsheet-options-wrap">
     <div class="songsheet-options">
-      <div class="all-songsheet" @click="clickOption(all.name)">{{ all.name }}</div>
+      <div class="all-songsheet" v-if="all.name" @click="clickOption(all.name)">{{ all.name }}</div>
       <div class="option-list">
         <template v-for="(item, i) in categories" :key="item">
           <div class="option-item">

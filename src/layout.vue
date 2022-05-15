@@ -1,7 +1,9 @@
 <template>
   <AppHeader />
   <router-view v-slot="props">
+    <keep-alive>
       <component class="component" :is="props.Component"></component>
+    </keep-alive>
   </router-view>
   <AppFooter/>
 </template>

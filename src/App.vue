@@ -186,6 +186,7 @@ export default {
   background-color: #ddd;
   border-top: 1px solid #999;
   box-shadow: 0 -3px 3px rgba(0, 0, 0, .3);
+  z-index: 999;
   .bar {
     width: 1400px;
     height: 50px;
